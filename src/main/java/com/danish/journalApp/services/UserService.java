@@ -25,7 +25,11 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    private JournalEntryRepository journalEntryRepository;
+    public JournalEntryRepository journalEntryRepository;
+
+    public ResponseEntity<List<User>> getAllUsers(){
+        return new ResponseEntity<>(userRepository.findAll(),  HttpStatus.OK);
+    }
 
     public ResponseEntity<?> updateUser(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,6 +46,11 @@ public class UserService {
     }
 
     public ResponseEntity<?> save(User user) {
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> saveAdmin(User user) {
         userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
