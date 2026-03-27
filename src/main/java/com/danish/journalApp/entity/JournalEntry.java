@@ -1,5 +1,6 @@
 package com.danish.journalApp.entity;
 
+import com.danish.journalApp.enums.Sentiment;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -13,8 +14,9 @@ public class JournalEntry {
 
 
     @Id
-    ObjectId id;
-    String title;
-    String content;
-    LocalDateTime date;
+    private ObjectId id;
+    private String title;
+    private String content;
+    private LocalDateTime date;
+    private Sentiment sentiment;
 }
