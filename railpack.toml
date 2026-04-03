@@ -1,0 +1,5 @@
+[build]
+nixpacks = false
+
+[languages.java]
+version = "1.8"
