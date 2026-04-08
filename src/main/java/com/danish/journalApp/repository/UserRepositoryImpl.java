@@ -19,7 +19,7 @@ public class UserRepositoryImpl {
 
     public List<User> getUserForSA() {
         query.addCriteria(Criteria.where("email").exists(true));
-        query.addCriteria(Criteria.where("sentimentAnalysis").exists(true));
+        query.addCriteria(Criteria.where("weeklyReport").exists(true));
 
         List<User> users = mongoTemplate.find(query, User.class);
         return users;

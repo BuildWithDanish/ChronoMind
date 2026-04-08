@@ -25,7 +25,7 @@ public class User {
     @NonNull
     private String password;
     private String email;
-    private boolean sentimentAnalysis;
+    private boolean weeklyReport;
     private List<JournalEntry> journalEntries = new ArrayList<>();
     private List<String> roles = new ArrayList<>();
 

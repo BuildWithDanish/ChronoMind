@@ -39,7 +39,7 @@ public class PublicController {
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@RequestBody User user) {
-        user.setRoles(Arrays.asList("User"));
+        user.setRoles(Arrays.asList("   User"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
