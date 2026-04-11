@@ -66,9 +66,8 @@ public class JournalEntryService {
         return removed;
     }
 
-    public String update(ObjectId id, JournalEntry newEntry) {
+    public void update(ObjectId id, JournalEntry newEntry) {
         newEntry.setDate(LocalDateTime.now());
         journalEntryRepository.save(newEntry);
-        return null;
     }
 }

@@ -26,8 +26,4 @@ public class GeminiConfig {
                             )))
                     .build();
 
-    GenerateContentResponse response =
-            client.models.generateContent("gemini-3-flash-preview", "Hello there", instruction);
-
-
 }

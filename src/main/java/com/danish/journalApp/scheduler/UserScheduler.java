@@ -46,7 +46,7 @@ public class UserScheduler {
                     .collect(Collectors.joining("\n"));
 
             GenerateContentResponse response =
-                    geminiConfig.client.models.generateContent("gemini-3-flash-preview", journalText, geminiConfig.instruction);
+                    geminiConfig.client.models.generateContent("gemini-2.5-flash", journalText, geminiConfig.instruction);
 
             emailService.sendMail(user.getEmail(),"Weekly Productivity Report", response.text());
         }

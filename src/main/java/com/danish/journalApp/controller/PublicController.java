@@ -1,5 +1,9 @@
 package com.danish.journalApp.controller;
 
+import com.danish.journalApp.dto.LoginRequest;
+import com.danish.journalApp.dto.Mapper;
+import com.danish.journalApp.dto.SignupRequest;
+import com.danish.journalApp.dto.UserResponse;
 import com.danish.journalApp.entity.User;
 import com.danish.journalApp.services.UserDetailServiceImpl;
 import com.danish.journalApp.services.UserService;
@@ -11,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -20,15 +24,19 @@ import java.util.Arrays;
 @RequestMapping("/public")
 @Slf4j
 public class PublicController {
+
     @Autowired
     UserService userService;
 
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserDetailServiceImpl userDetailsService;
 
@@ -38,24 +46,26 @@ public class PublicController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
-        user.setRoles(Arrays.asList("   User"));
+    public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest request) {
+        User user = Mapper.toUser(request);
+        user.setRoles(Arrays.asList("ROLE_USER"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
+        User saved = userService.save(user);
+        return new ResponseEntity<>(Mapper.toUserResponse(saved), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(), request.getPassword()));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Exception occurred while createAuthenticationToken ", e);
+            log.error("Login failed for user: {}", request.getUsername(), e);
             return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
     }
 }
-

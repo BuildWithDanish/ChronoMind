@@ -4,20 +4,14 @@ import com.danish.journalApp.entity.User;
 import com.danish.journalApp.repository.JournalEntryRepository;
 import com.danish.journalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,34 +26,28 @@ public class UserService {
     @Autowired
     public JournalEntryRepository journalEntryRepository;
 
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    public ResponseEntity<?> updateUser(User user) {
+    public User updateUser(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByUsername(authentication.getName());
         if (currentUser != null) {
-            currentUser.setRoles(Arrays.asList("User"));
             currentUser.setUsername(user.getUsername());
             currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(currentUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            currentUser.setEmail(user.getEmail());
+            currentUser.setWeeklyReport(user.isWeeklyReport());
+            return userRepository.save(currentUser);
         }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return null;
     }
 
     public User save(User user) {
         try {
-            User savedUser = userRepository.save(user);
-            return savedUser;
+            return userRepository.save(user);
         } catch (Exception e) {
-            log.error("hahahahha");
-            log.warn("hahahahha");
-            log.trace("hahahahha");
-            log.info("hahahahha");
-            log.debug("hahahahha");
+            log.error("Failed to save user: {}", user.getUsername(), e);
             throw new RuntimeException(e);
         }
     }
@@ -75,5 +63,9 @@ public class UserService {
             journalEntryRepository.deleteById(journalEntry.getId());
         });
         userRepository.deleteByUsername(username);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
