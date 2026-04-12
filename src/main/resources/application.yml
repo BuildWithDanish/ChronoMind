@@ -15,7 +15,18 @@ spring:
           auth: true
           starttls:
             enable: true
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080/chronoMind}
+  env: ${APP_ENV:Local}
 
-weather:
-  api:
-    key: ${WEATHER_API_KEY}
+server:
+  servlet:
+    context-path: /chronoMind
+
+springdoc:
+  swagger-ui:
+    path: /docs
+
+
+jwt:
+  secret: ${JWT_SECRET}
