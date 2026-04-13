@@ -132,7 +132,7 @@ Set the following environment variables before running:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/chronoMind.git
+git clone https://github.com/BuildWithDanish/chronoMind.git
 cd chronoMind
 
 # Set environment variables (or create a .env file and export them)
