@@ -61,7 +61,7 @@ public class PublicController {
     @PostMapping("/signup")
     public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest request) {
         User user = Mapper.toUser(request);
-        user.setRoles(Arrays.asList("ROLE_USER"));
+        user.setRoles(Arrays.asList("USER"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saved = userService.save(user);
         return new ResponseEntity<>(Mapper.toUserResponse(saved), HttpStatus.CREATED);

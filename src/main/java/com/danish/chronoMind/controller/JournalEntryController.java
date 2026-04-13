@@ -43,7 +43,7 @@ public class JournalEntryController {
     @Operation(summary = "Get All Entries", description = "Returns All Journal Entries of LoggedIn User")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Entries successfully retrieved"),
-            @ApiResponse(responseCode = "404", description = "Koi entry nahi mili"),
+            @ApiResponse(responseCode = "404", description = "No Entry Found"),
             @ApiResponse(responseCode = "401", description = "Unauthorized — JWT token required")
     })
     @GetMapping
